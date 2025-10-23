@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 10, 2025 at 08:09 AM
+-- Generation Time: Oct 17, 2025 at 09:18 AM
 -- Server version: 8.0.30
 -- PHP Version: 7.4.33
 
@@ -79,6 +79,13 @@ CREATE TABLE `buku` (
   `stok` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `buku`
+--
+
+INSERT INTO `buku` (`id_buku`, `judul`, `penulis`, `penerbit`, `tahun_terbit`, `stok`) VALUES
+(1, 'putri kecil', 'siska', 'gramedia', '1990', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -137,8 +144,8 @@ ALTER TABLE `anggota`
 --
 ALTER TABLE `booking`
   ADD PRIMARY KEY (`id_booking`),
-  ADD KEY `boking_buku_fk` (`id_buku`),
-  ADD KEY `booking_anggota_fk` (`id_anggota`);
+  ADD KEY `booking_anggota_fk` (`id_anggota`),
+  ADD KEY `booking_buku_fk` (`id_buku`);
 
 --
 -- Indexes for table `buku`
@@ -150,8 +157,8 @@ ALTER TABLE `buku`
 -- Indexes for table `buku_kategori`
 --
 ALTER TABLE `buku_kategori`
-  ADD KEY `buku_kategori_buku _fk` (`id_buku`),
-  ADD KEY `buku_kategori_kategori_fk` (`id_kategori`);
+  ADD KEY `buku_kategori_kategori_fk` (`id_kategori`),
+  ADD KEY `buku_kategori_buku_fk` (`id_buku`);
 
 --
 -- Indexes for table `kategori`
@@ -190,6 +197,12 @@ ALTER TABLE `booking`
   MODIFY `id_booking` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `buku`
+--
+ALTER TABLE `buku`
+  MODIFY `id_buku` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
@@ -209,14 +222,14 @@ ALTER TABLE `peminjaman`
 -- Constraints for table `booking`
 --
 ALTER TABLE `booking`
-  ADD CONSTRAINT `boking_buku_fk` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `booking_anggota_fk` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `booking_anggota_fk` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id_anggota`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `booking_buku_fk` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `buku_kategori`
 --
 ALTER TABLE `buku_kategori`
-  ADD CONSTRAINT `buku_kategori_buku _fk` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `buku_kategori_buku_fk` FOREIGN KEY (`id_buku`) REFERENCES `buku` (`id_buku`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `buku_kategori_kategori_fk` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
