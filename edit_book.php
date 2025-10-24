@@ -1,22 +1,6 @@
 <?php
 require_once 'config.php';
 
-if (isset($_GET['id_buku'])) {
-    $id_buku = $_GET['id_buku'];
-
-    $sql = "SELECT * FROM buku WHERE id_buku = ?";
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("i", $id_buku);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $buku = $result->fetch_assoc();
-
-    if (!$buku) {
-        die("Data tidak ditemukan!");
-    }
-}
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_buku = $_POST['id_buku'];
     $judul = $_POST['judul'];
@@ -24,8 +8,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $penerbit = $_POST['penerbit'];
     $tahun_terbit = $_POST['tahun_terbit'];
     $stok = $_POST['stok'];
+    
 
-    $sql = "UPDATE buku SET judul = ?, penulis = ?, penerbit = ?, tahun_terbit = ?, stok = ? WHERE id_buku = ?";
+    $sql = "UPDATE buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, stok=? WHERE id_buku=?";
+
     $stmt = $mysqli->prepare($sql);
     $stmt->bind_param("sssiii", $judul, $penulis, $penerbit, $tahun_terbit, $stok, $id_buku);
 
@@ -33,9 +19,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: buku.php");
         exit();
     } else {
-        echo "Error: Gagal mengupdate data.";
+        echo "Error: " . $stmt->error;
     }
 }
+
+if (isset($_GET['id_buku']) && !empty($_GET['id_buku'])) {
+    $id = $_GET['id_buku'];
+    $sql = "SELECT * FROM buku WHERE id_buku = ?";
+    if ($stmt = $mysqli->prepare($sql)) {
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 1) {
+            $buku = $result->fetch_assoc();
+        } else {
+            echo "Data tidak ditemukan.";
+            exit();
+        }
+        $stmt->close();
+    }
+} else {
+    header("location: buku.php");
+    exit();
+}
+
 ?>
 
 <!doctype html>
@@ -77,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="number" name="stok" class="form-control" id="stok" value="<?= $buku['stok']; ?>" required>
             </div>
 
-            <button type="submit" class="btn btn-primary">Update</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="buku.php" class="btn btn-secondary">Batal</a>
         </form>
     </div>

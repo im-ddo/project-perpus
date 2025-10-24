@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $tahun_terbit = $_POST['tahun_terbit'];
     $stok = $_POST['stok'];
 
-    $sql = "INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, stok) VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO buku SET judul=?, penulis=?, penerbit=?, tahun_terbit=?, stok=? WHERE id_buku=?";
 
     if ($stmt = $mysqli->prepare($sql)) {
         $stmt->bind_param("sssii", $judul, $penulis, $penerbit, $tahun_terbit, $stok);
